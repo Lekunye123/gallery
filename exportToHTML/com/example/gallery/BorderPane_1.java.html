@@ -1,0 +1,500 @@
+<html>
+<head>
+<title>BorderPane_1.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+.s6 { color: #5f826b; font-style: italic;}
+.s7 { color: #67a37c; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+BorderPane_1.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">gallery</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">application</span><span class="s2">.</span><span class="s1">Application</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">.</span><span class="s1">Insets</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">.</span><span class="s1">Pos</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">Scene</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">control</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">Image</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">ImageView</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">stage</span><span class="s2">.</span><span class="s1">DirectoryChooser</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">stage</span><span class="s2">.</span><span class="s1">Stage</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">File</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">BorderPane_1 </span><span class="s0">extends </span><span class="s1">Application </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">FlowPane imageContainer</span><span class="s2">; </span><span class="s3">// Container to hold image thumbnails</span>
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Image</span><span class="s2">&gt; </span><span class="s1">imageList</span><span class="s2">; </span><span class="s3">// List to hold all images</span>
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">File</span><span class="s2">&gt; </span><span class="s1">imageFileList</span><span class="s2">; </span><span class="s3">// List to hold file paths of images</span>
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Image</span><span class="s2">&gt; </span><span class="s1">recycleBin</span><span class="s2">; </span><span class="s3">// List to hold deleted images</span>
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">File</span><span class="s2">&gt; </span><span class="s1">recycleBinFiles</span><span class="s2">; </span><span class="s3">// List to hold file paths of deleted images</span>
+    <span class="s0">private int </span><span class="s1">currentImageIndex</span><span class="s2">; </span><span class="s3">// Index of the currently zoomed image</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">start</span><span class="s2">(</span><span class="s1">Stage primaryStage</span><span class="s2">) {</span>
+        <span class="s3">// Initialize the recycle bin</span>
+        <span class="s1">recycleBin </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">recycleBinFiles </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+
+        <span class="s3">// Create the main layout</span>
+        <span class="s1">VBox root </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+        <span class="s1">root</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">10</span><span class="s2">));</span>
+        <span class="s1">root</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">10</span><span class="s2">);</span>
+        <span class="s1">root</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">TOP_CENTER</span><span class="s2">); </span><span class="s3">// Center align the content</span>
+
+        <span class="s3">// Apply internal CSS to the root layout</span>
+        <span class="s1">root</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #f4f4f4;&quot; </span><span class="s2">+ </span><span class="s3">// Light gray background</span>
+                        <span class="s5">&quot;-fx-border-color: #a8d8ea;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue border</span>
+                        <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+</span>
+                        <span class="s5">&quot;-fx-border-radius: 10px;&quot;</span>
+        <span class="s2">);</span>
+
+        <span class="s3">// Create a menu bar with a &quot;Open Folder&quot; option</span>
+        <span class="s1">MenuBar menuBar </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MenuBar</span><span class="s2">();</span>
+        <span class="s1">menuBar</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #a8d8ea;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue background for the menu bar</span>
+                        <span class="s5">&quot;-fx-text-fill: #ffffff;&quot; </span><span class="s3">// White text color</span>
+        <span class="s2">);</span>
+
+        <span class="s1">Menu fileMenu </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Menu</span><span class="s2">(</span><span class="s5">&quot;File&quot;</span><span class="s2">);</span>
+        <span class="s1">fileMenu</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-text-fill: #ffffff;&quot;</span><span class="s2">); </span><span class="s3">// White text for the menu</span>
+
+        <span class="s1">MenuItem openFolderItem </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MenuItem</span><span class="s2">(</span><span class="s5">&quot;Open Folder&quot;</span><span class="s2">);</span>
+        <span class="s1">openFolderItem</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #ff9aa2;&quot; </span><span class="s2">+ </span><span class="s3">// Light pink background for menu items</span>
+                        <span class="s5">&quot;-fx-text-fill: #ffffff;&quot; </span><span class="s3">// White text color</span>
+        <span class="s2">);</span>
+
+        <span class="s1">MenuItem viewRecycleBinItem </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MenuItem</span><span class="s2">(</span><span class="s5">&quot;View Recycle Bin&quot;</span><span class="s2">);</span>
+        <span class="s1">viewRecycleBinItem</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #ff9aa2;&quot; </span><span class="s2">+ </span><span class="s3">// Light pink background for menu items</span>
+                        <span class="s5">&quot;-fx-text-fill: #ffffff;&quot; </span><span class="s3">// White text color</span>
+        <span class="s2">);</span>
+
+        <span class="s1">fileMenu</span><span class="s2">.</span><span class="s1">getItems</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">openFolderItem</span><span class="s2">, </span><span class="s1">viewRecycleBinItem</span><span class="s2">);</span>
+        <span class="s1">menuBar</span><span class="s2">.</span><span class="s1">getMenus</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">fileMenu</span><span class="s2">);</span>
+
+        <span class="s3">// Wrap the MenuBar in an HBox to center it</span>
+        <span class="s1">HBox menuBarContainer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HBox</span><span class="s2">(</span><span class="s1">menuBar</span><span class="s2">);</span>
+        <span class="s1">menuBarContainer</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">); </span><span class="s3">// Center the MenuBar</span>
+
+        <span class="s3">// Create a container for the images</span>
+        <span class="s1">imageContainer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">FlowPane</span><span class="s2">();</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">setHgap</span><span class="s2">(</span><span class="s4">10</span><span class="s2">);</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">setVgap</span><span class="s2">(</span><span class="s4">10</span><span class="s2">);</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">10</span><span class="s2">));</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">); </span><span class="s3">// Center align the images</span>
+
+        <span class="s3">// Apply internal CSS to the image container</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #ffffff;&quot; </span><span class="s2">+ </span><span class="s3">// White background</span>
+                        <span class="s5">&quot;-fx-border-color: #a8d8ea;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue border</span>
+                        <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+</span>
+                        <span class="s5">&quot;-fx-border-radius: 10px;&quot; </span><span class="s2">+</span>
+                        <span class="s5">&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);&quot; </span><span class="s3">// Add shadow effect</span>
+        <span class="s2">);</span>
+
+        <span class="s3">// Wrap the image container in a ScrollPane</span>
+        <span class="s1">ScrollPane scrollPane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ScrollPane</span><span class="s2">(</span><span class="s1">imageContainer</span><span class="s2">);</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setFitToWidth</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setFitToHeight</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background: #f4f4f4;&quot;</span><span class="s2">); </span><span class="s3">// Match the background color</span>
+
+        <span class="s3">// Add the menu bar container and scrollable image container to the root layout</span>
+        <span class="s1">root</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">menuBarContainer</span><span class="s2">, </span><span class="s1">scrollPane</span><span class="s2">);</span>
+
+        <span class="s3">// Set up the scene and stage</span>
+        <span class="s1">Scene scene </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scene</span><span class="s2">(</span><span class="s1">root</span><span class="s2">, </span><span class="s4">800</span><span class="s2">, </span><span class="s4">600</span><span class="s2">);</span>
+
+        <span class="s3">// Apply global CSS to the scene</span>
+        <span class="s1">scene</span><span class="s2">.</span><span class="s1">getRoot</span><span class="s2">().</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-font-family: 'Arial';&quot; </span><span class="s2">+ </span><span class="s3">// Set font family</span>
+                        <span class="s5">&quot;-fx-font-size: 14px;&quot; </span><span class="s3">// Set font size</span>
+        <span class="s2">);</span>
+
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s5">&quot;Image Gallery&quot;</span><span class="s2">);</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">scene</span><span class="s2">);</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">show</span><span class="s2">();</span>
+
+        <span class="s3">// Handle &quot;Open Folder&quot; menu item click</span>
+        <span class="s1">openFolderItem</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s3">// Create a DirectoryChooser</span>
+            <span class="s1">DirectoryChooser directoryChooser </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DirectoryChooser</span><span class="s2">();</span>
+            <span class="s1">directoryChooser</span><span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s5">&quot;Select Image Folder&quot;</span><span class="s2">);</span>
+
+            <span class="s3">// Add instructions to the DirectoryChooser dialog</span>
+            <span class="s1">Label instructions </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;📁 Please select a folder containing images (JPG, PNG, JPEG).&quot;</span><span class="s2">);</span>
+            <span class="s1">instructions</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                    <span class="s5">&quot;-fx-text-fill: #ffffff;&quot; </span><span class="s2">+ </span><span class="s3">// White text color</span>
+                            <span class="s5">&quot;-fx-font-size: 16px;&quot; </span><span class="s2">+ </span><span class="s3">// Larger font size</span>
+                            <span class="s5">&quot;-fx-font-weight: bold;&quot; </span><span class="s2">+ </span><span class="s3">// Bold text</span>
+                            <span class="s5">&quot;-fx-background-color: #ff6f61;&quot; </span><span class="s2">+ </span><span class="s3">// Coral background color</span>
+                            <span class="s5">&quot;-fx-padding: 10px;&quot; </span><span class="s2">+ </span><span class="s3">// Padding around the text</span>
+                            <span class="s5">&quot;-fx-border-color: #ffcc00;&quot; </span><span class="s2">+ </span><span class="s3">// Yellow border</span>
+                            <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+ </span><span class="s3">// Border width</span>
+                            <span class="s5">&quot;-fx-border-radius: 5px;&quot; </span><span class="s2">+ </span><span class="s3">// Rounded corners</span>
+                            <span class="s5">&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 0);&quot; </span><span class="s3">// Shadow effect</span>
+            <span class="s2">);</span>
+
+            <span class="s3">// Create a custom dialog layout</span>
+            <span class="s1">VBox dialogLayout </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">(</span><span class="s4">10</span><span class="s2">, </span><span class="s1">instructions</span><span class="s2">);</span>
+            <span class="s1">dialogLayout</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+            <span class="s1">dialogLayout</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">20</span><span class="s2">));</span>
+            <span class="s1">dialogLayout</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                    <span class="s5">&quot;-fx-background-color: #0ab1e4;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue background</span>
+                            <span class="s5">&quot;-fx-border-color: #14a9e1;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue border</span>
+                            <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+</span>
+                            <span class="s5">&quot;-fx-border-radius: 10px;&quot;</span>
+            <span class="s2">);</span>
+
+            <span class="s3">// Show the DirectoryChooser</span>
+            <span class="s1">File selectedDirectory </span><span class="s2">= </span><span class="s1">directoryChooser</span><span class="s2">.</span><span class="s1">showDialog</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">selectedDirectory </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s1">showAlert</span><span class="s2">(</span><span class="s5">&quot;Loading Images&quot;</span><span class="s2">, </span><span class="s5">&quot;Please wait while the folder is loading. This may take a few minutes.&quot;</span><span class="s2">);</span>
+                <span class="s1">loadImagesFromDirectory</span><span class="s2">(</span><span class="s1">selectedDirectory</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">// Handle &quot;View Recycle Bin&quot; menu item click</span>
+        <span class="s1">viewRecycleBinItem</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; viewRecycleBin</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s6">/**</span>
+     <span class="s6">* Load images from the selected directory and display them as thumbnails.</span>
+     <span class="s6">*</span>
+     <span class="s6">* </span><span class="s7">@param </span><span class="s6">directory The directory containing the images.</span>
+     <span class="s6">*/</span>
+    <span class="s0">private void </span><span class="s1">loadImagesFromDirectory</span><span class="s2">(</span><span class="s1">File directory</span><span class="s2">) {</span>
+        <span class="s3">// Clear existing images</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">clear</span><span class="s2">();</span>
+        <span class="s1">imageList </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">imageFileList </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+
+        <span class="s3">// Get all files in the directory</span>
+        <span class="s1">File</span><span class="s2">[] </span><span class="s1">files </span><span class="s2">= </span><span class="s1">directory</span><span class="s2">.</span><span class="s1">listFiles</span><span class="s2">();</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">files </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">showError</span><span class="s2">(</span><span class="s5">&quot;Invalid directory or no images found.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s3">// Load and display images</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">File file </span><span class="s2">: </span><span class="s1">files</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">isImageFile</span><span class="s2">(</span><span class="s1">file</span><span class="s2">)) {</span>
+                <span class="s1">Image image </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Image</span><span class="s2">(</span><span class="s1">file</span><span class="s2">.</span><span class="s1">toURI</span><span class="s2">().</span><span class="s1">toString</span><span class="s2">());</span>
+                <span class="s1">imageList</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">image</span><span class="s2">);</span>
+                <span class="s1">imageFileList</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">file</span><span class="s2">);</span>
+                <span class="s1">ImageView imageView </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s1">image</span><span class="s2">);</span>
+
+                <span class="s3">// Set thumbnail size</span>
+                <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s4">150</span><span class="s2">);</span>
+                <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s4">150</span><span class="s2">);</span>
+                <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setPreserveRatio</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+                <span class="s3">// Apply internal CSS to the image view</span>
+                <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                        <span class="s5">&quot;-fx-border-color: #a8d8ea;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue border</span>
+                                <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+</span>
+                                <span class="s5">&quot;-fx-border-radius: 10px;&quot; </span><span class="s2">+</span>
+                                <span class="s5">&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);&quot; </span><span class="s3">// Add shadow effect</span>
+                <span class="s2">);</span>
+
+                <span class="s3">// Add click event to zoom the image</span>
+                <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setOnMouseClicked</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+                    <span class="s1">currentImageIndex </span><span class="s2">= </span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">indexOf</span><span class="s2">(</span><span class="s1">image</span><span class="s2">);</span>
+                    <span class="s1">zoomImage</span><span class="s2">(</span><span class="s1">image</span><span class="s2">);</span>
+                <span class="s2">});</span>
+
+                <span class="s3">// Add the image to the container</span>
+                <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">imageView</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s6">/**</span>
+     <span class="s6">* Check if a file is an image (supports .jpg, .png, .jpeg).</span>
+     <span class="s6">*</span>
+     <span class="s6">* </span><span class="s7">@param </span><span class="s6">file The file to check.</span>
+     <span class="s6">* </span><span class="s7">@return </span><span class="s6">True if the file is an image, false otherwise.</span>
+     <span class="s6">*/</span>
+    <span class="s0">private boolean </span><span class="s1">isImageFile</span><span class="s2">(</span><span class="s1">File file</span><span class="s2">) {</span>
+        <span class="s1">String name </span><span class="s2">= </span><span class="s1">file</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">().</span><span class="s1">toLowerCase</span><span class="s2">();</span>
+        <span class="s0">return </span><span class="s1">name</span><span class="s2">.</span><span class="s1">endsWith</span><span class="s2">(</span><span class="s5">&quot;.jpg&quot;</span><span class="s2">) || </span><span class="s1">name</span><span class="s2">.</span><span class="s1">endsWith</span><span class="s2">(</span><span class="s5">&quot;.png&quot;</span><span class="s2">) || </span><span class="s1">name</span><span class="s2">.</span><span class="s1">endsWith</span><span class="s2">(</span><span class="s5">&quot;.jpeg&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s6">/**</span>
+     <span class="s6">* Display an error message.</span>
+     <span class="s6">*</span>
+     <span class="s6">* </span><span class="s7">@param </span><span class="s6">message The error message to display.</span>
+     <span class="s6">*/</span>
+    <span class="s0">private void </span><span class="s1">showError</span><span class="s2">(</span><span class="s1">String message</span><span class="s2">) {</span>
+        <span class="s1">Alert alert </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Alert</span><span class="s2">(</span><span class="s1">Alert</span><span class="s2">.</span><span class="s1">AlertType</span><span class="s2">.</span><span class="s1">ERROR</span><span class="s2">);</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s5">&quot;Error&quot;</span><span class="s2">);</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">setHeaderText</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">setContentText</span><span class="s2">(</span><span class="s1">message</span><span class="s2">);</span>
+
+        <span class="s3">// Apply internal CSS to the alert dialog</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">getDialogPane</span><span class="s2">().</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #ff6f61;&quot; </span><span class="s2">+ </span><span class="s3">// Coral background</span>
+                        <span class="s5">&quot;-fx-border-color: #ffcc00;&quot; </span><span class="s2">+ </span><span class="s3">// Yellow border</span>
+                        <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+</span>
+                        <span class="s5">&quot;-fx-border-radius: 10px;&quot;</span>
+        <span class="s2">);</span>
+
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">showAndWait</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s6">/**</span>
+     <span class="s6">* Zoom an image by displaying it in a new window.</span>
+     <span class="s6">*</span>
+     <span class="s6">* </span><span class="s7">@param </span><span class="s6">image The image to zoom.</span>
+     <span class="s6">*/</span>
+    <span class="s0">private void </span><span class="s1">zoomImage</span><span class="s2">(</span><span class="s1">Image image</span><span class="s2">) {</span>
+        <span class="s1">Stage zoomStage </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Stage</span><span class="s2">();</span>
+        <span class="s1">ImageView zoomedImageView </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s1">image</span><span class="s2">);</span>
+
+        <span class="s3">// Set the zoomed image size</span>
+        <span class="s1">zoomedImageView</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s4">600</span><span class="s2">);</span>
+        <span class="s1">zoomedImageView</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s4">400</span><span class="s2">);</span>
+        <span class="s1">zoomedImageView</span><span class="s2">.</span><span class="s1">setPreserveRatio</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+        <span class="s3">// Apply internal CSS to the zoomed image view</span>
+        <span class="s1">zoomedImageView</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-border-color: #a8d8ea;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue border</span>
+                        <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+</span>
+                        <span class="s5">&quot;-fx-border-radius: 10px;&quot; </span><span class="s2">+</span>
+                        <span class="s5">&quot;-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);&quot; </span><span class="s3">// Add shadow effect</span>
+        <span class="s2">);</span>
+
+        <span class="s3">// Create navigation buttons</span>
+        <span class="s1">Button backButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;← Back&quot;</span><span class="s2">);</span>
+        <span class="s1">Button forwardButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Forward →&quot;</span><span class="s2">);</span>
+        <span class="s1">Button deleteButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Delete&quot;</span><span class="s2">);</span>
+
+        <span class="s3">// Add action handlers for navigation buttons</span>
+        <span class="s1">backButton</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentImageIndex </span><span class="s2">&gt; </span><span class="s4">0</span><span class="s2">) {</span>
+                <span class="s1">currentImageIndex</span><span class="s2">--;</span>
+                <span class="s1">zoomedImageView</span><span class="s2">.</span><span class="s1">setImage</span><span class="s2">(</span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentImageIndex</span><span class="s2">));</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s1">forwardButton</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentImageIndex </span><span class="s2">&lt; </span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() - </span><span class="s4">1</span><span class="s2">) {</span>
+                <span class="s1">currentImageIndex</span><span class="s2">++;</span>
+                <span class="s1">zoomedImageView</span><span class="s2">.</span><span class="s1">setImage</span><span class="s2">(</span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentImageIndex</span><span class="s2">));</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">// Add action handler for delete button</span>
+        <span class="s1">deleteButton</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s3">// Remove the current image from the image list and add it to the recycle bin</span>
+            <span class="s1">Image deletedImage </span><span class="s2">= </span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">currentImageIndex</span><span class="s2">);</span>
+            <span class="s1">File deletedFile </span><span class="s2">= </span><span class="s1">imageFileList</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">currentImageIndex</span><span class="s2">);</span>
+            <span class="s1">recycleBin</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">deletedImage</span><span class="s2">);</span>
+            <span class="s1">recycleBinFiles</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">deletedFile</span><span class="s2">);</span>
+
+            <span class="s3">// If there are no more images, close the zoom window</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+                <span class="s1">zoomStage</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+                <span class="s0">return</span><span class="s2">;</span>
+            <span class="s2">}</span>
+
+            <span class="s3">// Update the current image index to show the next image (or the previous one if at the end)</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentImageIndex </span><span class="s2">&gt;= </span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">size</span><span class="s2">()) {</span>
+                <span class="s1">currentImageIndex </span><span class="s2">= </span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">size</span><span class="s2">() - </span><span class="s4">1</span><span class="s2">; </span><span class="s3">// Move to the previous image</span>
+            <span class="s2">}</span>
+
+            <span class="s3">// Update the zoomed image view to show the next/previous image</span>
+            <span class="s1">zoomedImageView</span><span class="s2">.</span><span class="s1">setImage</span><span class="s2">(</span><span class="s1">imageList</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentImageIndex</span><span class="s2">));</span>
+        <span class="s2">});</span>
+
+        <span class="s3">// Create a container for the navigation buttons</span>
+        <span class="s1">HBox navigationContainer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HBox</span><span class="s2">(</span><span class="s4">10</span><span class="s2">, </span><span class="s1">backButton</span><span class="s2">, </span><span class="s1">forwardButton</span><span class="s2">, </span><span class="s1">deleteButton</span><span class="s2">);</span>
+        <span class="s1">navigationContainer</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s3">// Create the scene and stage</span>
+        <span class="s1">VBox zoomRoot </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">(</span><span class="s4">10</span><span class="s2">, </span><span class="s1">zoomedImageView</span><span class="s2">, </span><span class="s1">navigationContainer</span><span class="s2">);</span>
+        <span class="s1">zoomRoot</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #f4f4f4;&quot; </span><span class="s2">+ </span><span class="s3">// Light gray background</span>
+                        <span class="s5">&quot;-fx-padding: 10px;&quot; </span><span class="s3">// Add padding</span>
+        <span class="s2">);</span>
+
+        <span class="s1">Scene zoomScene </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scene</span><span class="s2">(</span><span class="s1">zoomRoot</span><span class="s2">, </span><span class="s4">600</span><span class="s2">, </span><span class="s4">450</span><span class="s2">);</span>
+        <span class="s1">zoomStage</span><span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s5">&quot;Zoomed Image&quot;</span><span class="s2">);</span>
+        <span class="s1">zoomStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">zoomScene</span><span class="s2">);</span>
+        <span class="s1">zoomStage</span><span class="s2">.</span><span class="s1">show</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s6">/**</span>
+     <span class="s6">* View the recycle bin and allow restoring or permanently deleting images.</span>
+     <span class="s6">*/</span>
+    <span class="s0">private void </span><span class="s1">viewRecycleBin</span><span class="s2">() {</span>
+        <span class="s1">Stage recycleBinStage </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Stage</span><span class="s2">();</span>
+        <span class="s1">VBox recycleBinRoot </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">(</span><span class="s4">10</span><span class="s2">);</span>
+        <span class="s1">recycleBinRoot</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">10</span><span class="s2">));</span>
+        <span class="s1">recycleBinRoot</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s3">// Create a list to track selected images</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Image</span><span class="s2">&gt; </span><span class="s1">selectedImages </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">File</span><span class="s2">&gt; </span><span class="s1">selectedFiles </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+
+        <span class="s3">// Create buttons for actions</span>
+        <span class="s1">Button selectAllButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Select All&quot;</span><span class="s2">);</span>
+        <span class="s1">Button restoreButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Restore Selected&quot;</span><span class="s2">);</span>
+        <span class="s1">Button permanentDeleteButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Permanently Delete Selected&quot;</span><span class="s2">);</span>
+        <span class="s1">Button clearBinButton </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Clear Bin&quot;</span><span class="s2">);</span>
+
+        <span class="s3">// Add action handlers for buttons</span>
+        <span class="s1">selectAllButton</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+            <span class="s1">selectedFiles</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+            <span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">recycleBin</span><span class="s2">); </span><span class="s3">// Select all images in the bin</span>
+            <span class="s1">selectedFiles</span><span class="s2">.</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">recycleBinFiles</span><span class="s2">); </span><span class="s3">// Select all files in the bin</span>
+            <span class="s1">showAlert</span><span class="s2">(</span><span class="s5">&quot;Selected All&quot;</span><span class="s2">, </span><span class="s5">&quot;All images in the recycle bin have been selected.&quot;</span><span class="s2">);</span>
+        <span class="s2">});</span>
+
+        <span class="s1">restoreButton</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+                <span class="s1">showAlert</span><span class="s2">(</span><span class="s5">&quot;No Selection&quot;</span><span class="s2">, </span><span class="s5">&quot;Please select images to restore.&quot;</span><span class="s2">);</span>
+                <span class="s0">return</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s1">imageList</span><span class="s2">.</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">selectedImages</span><span class="s2">); </span><span class="s3">// Restore selected images to the gallery</span>
+            <span class="s1">imageFileList</span><span class="s2">.</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">selectedFiles</span><span class="s2">); </span><span class="s3">// Restore selected files to the gallery</span>
+            <span class="s1">recycleBin</span><span class="s2">.</span><span class="s1">removeAll</span><span class="s2">(</span><span class="s1">selectedImages</span><span class="s2">); </span><span class="s3">// Remove them from the recycle bin</span>
+            <span class="s1">recycleBinFiles</span><span class="s2">.</span><span class="s1">removeAll</span><span class="s2">(</span><span class="s1">selectedFiles</span><span class="s2">); </span><span class="s3">// Remove them from the recycle bin files</span>
+            <span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear the selection</span>
+            <span class="s1">selectedFiles</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear the selection</span>
+            <span class="s1">recycleBinStage</span><span class="s2">.</span><span class="s1">close</span><span class="s2">(); </span><span class="s3">// Close the recycle bin window</span>
+            <span class="s1">viewRecycleBin</span><span class="s2">(); </span><span class="s3">// Refresh the recycle bin view</span>
+        <span class="s2">});</span>
+
+        <span class="s1">permanentDeleteButton</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+                <span class="s1">showAlert</span><span class="s2">(</span><span class="s5">&quot;No Selection&quot;</span><span class="s2">, </span><span class="s5">&quot;Please select images to permanently delete.&quot;</span><span class="s2">);</span>
+                <span class="s0">return</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s3">// Delete files from disk</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s1">File file </span><span class="s2">: </span><span class="s1">selectedFiles</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">file</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+                    <span class="s1">file</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(); </span><span class="s3">// Permanently delete the file</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+            <span class="s1">recycleBin</span><span class="s2">.</span><span class="s1">removeAll</span><span class="s2">(</span><span class="s1">selectedImages</span><span class="s2">); </span><span class="s3">// Remove them from the recycle bin</span>
+            <span class="s1">recycleBinFiles</span><span class="s2">.</span><span class="s1">removeAll</span><span class="s2">(</span><span class="s1">selectedFiles</span><span class="s2">); </span><span class="s3">// Remove them from the recycle bin files</span>
+            <span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear the selection</span>
+            <span class="s1">selectedFiles</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear the selection</span>
+            <span class="s1">recycleBinStage</span><span class="s2">.</span><span class="s1">close</span><span class="s2">(); </span><span class="s3">// Close the recycle bin window</span>
+            <span class="s1">viewRecycleBin</span><span class="s2">(); </span><span class="s3">// Refresh the recycle bin view</span>
+        <span class="s2">});</span>
+
+        <span class="s1">clearBinButton</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">recycleBin</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+                <span class="s1">showAlert</span><span class="s2">(</span><span class="s5">&quot;Bin Empty&quot;</span><span class="s2">, </span><span class="s5">&quot;The recycle bin is already empty.&quot;</span><span class="s2">);</span>
+                <span class="s0">return</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s3">// Delete all files from disk</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s1">File file </span><span class="s2">: </span><span class="s1">recycleBinFiles</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">file</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+                    <span class="s1">file</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">(); </span><span class="s3">// Permanently delete the file</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+            <span class="s1">recycleBin</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear all images from the recycle bin</span>
+            <span class="s1">recycleBinFiles</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear all files from the recycle bin</span>
+            <span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear the selection</span>
+            <span class="s1">selectedFiles</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">(); </span><span class="s3">// Clear the selection</span>
+            <span class="s1">recycleBinStage</span><span class="s2">.</span><span class="s1">close</span><span class="s2">(); </span><span class="s3">// Close the recycle bin window</span>
+            <span class="s1">viewRecycleBin</span><span class="s2">(); </span><span class="s3">// Refresh the recycle bin view</span>
+        <span class="s2">});</span>
+
+        <span class="s3">// Create a container for the action buttons</span>
+        <span class="s1">HBox buttonContainer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HBox</span><span class="s2">(</span><span class="s4">10</span><span class="s2">, </span><span class="s1">selectAllButton</span><span class="s2">, </span><span class="s1">restoreButton</span><span class="s2">, </span><span class="s1">permanentDeleteButton</span><span class="s2">, </span><span class="s1">clearBinButton</span><span class="s2">);</span>
+        <span class="s1">buttonContainer</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s3">// Create a scrollable container for the images</span>
+        <span class="s1">ScrollPane scrollPane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ScrollPane</span><span class="s2">();</span>
+        <span class="s1">VBox imageContainer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">(</span><span class="s4">10</span><span class="s2">);</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">10</span><span class="s2">));</span>
+        <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+
+        <span class="s3">// Display images in the recycle bin</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Image image </span><span class="s2">: </span><span class="s1">recycleBin</span><span class="s2">) {</span>
+            <span class="s1">ImageView imageView </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s1">image</span><span class="s2">);</span>
+            <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s4">150</span><span class="s2">);</span>
+            <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s4">150</span><span class="s2">);</span>
+            <span class="s1">imageView</span><span class="s2">.</span><span class="s1">setPreserveRatio</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+            <span class="s1">CheckBox selectCheckBox </span><span class="s2">= </span><span class="s0">new </span><span class="s1">CheckBox</span><span class="s2">();</span>
+            <span class="s1">selectCheckBox</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">selectCheckBox</span><span class="s2">.</span><span class="s1">isSelected</span><span class="s2">()) {</span>
+                    <span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">image</span><span class="s2">); </span><span class="s3">// Add image to selected list</span>
+                    <span class="s1">selectedFiles</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">recycleBinFiles</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">recycleBin</span><span class="s2">.</span><span class="s1">indexOf</span><span class="s2">(</span><span class="s1">image</span><span class="s2">))); </span><span class="s3">// Add file to selected list</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">selectedImages</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">image</span><span class="s2">); </span><span class="s3">// Remove image from selected list</span>
+                    <span class="s1">selectedFiles</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">recycleBinFiles</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">recycleBin</span><span class="s2">.</span><span class="s1">indexOf</span><span class="s2">(</span><span class="s1">image</span><span class="s2">))); </span><span class="s3">// Remove file from selected list</span>
+                <span class="s2">}</span>
+            <span class="s2">});</span>
+
+            <span class="s1">HBox imageBox </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HBox</span><span class="s2">(</span><span class="s4">10</span><span class="s2">, </span><span class="s1">imageView</span><span class="s2">, </span><span class="s1">selectCheckBox</span><span class="s2">);</span>
+            <span class="s1">imageBox</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+            <span class="s1">imageContainer</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">imageBox</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setContent</span><span class="s2">(</span><span class="s1">imageContainer</span><span class="s2">);</span>
+        <span class="s1">scrollPane</span><span class="s2">.</span><span class="s1">setFitToWidth</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+        <span class="s3">// Add the scrollable container and button container to the recycle bin root</span>
+        <span class="s1">recycleBinRoot</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">scrollPane</span><span class="s2">, </span><span class="s1">buttonContainer</span><span class="s2">);</span>
+
+        <span class="s1">Scene recycleBinScene </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scene</span><span class="s2">(</span><span class="s1">recycleBinRoot</span><span class="s2">, </span><span class="s4">400</span><span class="s2">, </span><span class="s4">300</span><span class="s2">);</span>
+        <span class="s1">recycleBinStage</span><span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s5">&quot;Recycle Bin&quot;</span><span class="s2">);</span>
+        <span class="s1">recycleBinStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">recycleBinScene</span><span class="s2">);</span>
+        <span class="s1">recycleBinStage</span><span class="s2">.</span><span class="s1">show</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s6">/**</span>
+     <span class="s6">* Display an alert dialog.</span>
+     <span class="s6">*</span>
+     <span class="s6">* </span><span class="s7">@param </span><span class="s6">title   The title of the alert.</span>
+     <span class="s6">* </span><span class="s7">@param </span><span class="s6">message The message to display.</span>
+     <span class="s6">*/</span>
+    <span class="s0">private void </span><span class="s1">showAlert</span><span class="s2">(</span><span class="s1">String title</span><span class="s2">, </span><span class="s1">String message</span><span class="s2">) {</span>
+        <span class="s1">Alert alert </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Alert</span><span class="s2">(</span><span class="s1">Alert</span><span class="s2">.</span><span class="s1">AlertType</span><span class="s2">.</span><span class="s1">INFORMATION</span><span class="s2">);</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s1">title</span><span class="s2">);</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">setHeaderText</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">setContentText</span><span class="s2">(</span><span class="s1">message</span><span class="s2">);</span>
+
+        <span class="s3">// Apply internal CSS to the alert dialog</span>
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">getDialogPane</span><span class="s2">().</span><span class="s1">setStyle</span><span class="s2">(</span>
+                <span class="s5">&quot;-fx-background-color: #a8d8ea;&quot; </span><span class="s2">+ </span><span class="s3">// Light blue background</span>
+                        <span class="s5">&quot;-fx-border-color: #ffcc00;&quot; </span><span class="s2">+ </span><span class="s3">// Yellow border</span>
+                        <span class="s5">&quot;-fx-border-width: 2px;&quot; </span><span class="s2">+</span>
+                        <span class="s5">&quot;-fx-border-radius: 10px;&quot;</span>
+        <span class="s2">);</span>
+
+        <span class="s1">alert</span><span class="s2">.</span><span class="s1">showAndWait</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public static void </span><span class="s1">main</span><span class="s2">(</span><span class="s1">String</span><span class="s2">[] </span><span class="s1">args</span><span class="s2">) {</span>
+        <span class="s1">launch</span><span class="s2">(</span><span class="s1">args</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>
